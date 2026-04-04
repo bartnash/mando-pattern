@@ -9,9 +9,24 @@ export default function App() {
   const [selectedPatternId, setSelectedPatternId] = useState<string>(DEFAULT_PATTERNS[0].id);
   const [currentChordIndex, setCurrentChordIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [targetKey, setTargetKey] = useState(0); // 0=G, 1=G#, 2=A, etc.
+
+  const KEYS = ['G', 'G#', 'A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#'];
 
   const selectedPattern = DEFAULT_PATTERNS.find(p => p.id === selectedPatternId) || DEFAULT_PATTERNS[0];
+  
+  // Calculate offset based on target key and pattern's root note
+  // We try to keep the offset in a playable range (-2 to +9)
+  let fretOffset = targetKey - selectedPattern.rootNote;
+  if (fretOffset > 9) fretOffset -= 12;
+  if (fretOffset < -2) fretOffset += 12;
+
+  const getShiftedFrets = (frets: (number | 'x')[]) => {
+    return frets.map(f => (typeof f === 'number' ? f + fretOffset : f));
+  };
+
   const currentChord = selectedPattern.chords[currentChordIndex];
+  const shiftedCurrentFrets = getShiftedFrets(currentChord.frets);
 
   const paginate = (newDirection: number) => {
     const total = selectedPattern.chords.length;
@@ -47,12 +62,46 @@ export default function App() {
             <p className="text-xs text-stone-500 font-medium">Movable Chord Explorer</p>
           </div>
         </div>
-        <button className="p-2 hover:bg-stone-100 rounded-full transition-colors text-stone-600">
-          <Settings className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3 bg-stone-50 px-4 py-1.5 rounded-full border border-stone-200">
+            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Key</span>
+            <select 
+              value={targetKey}
+              onChange={(e) => setTargetKey(parseInt(e.target.value))}
+              className="bg-transparent text-sm font-bold text-stone-700 outline-none cursor-pointer hover:text-stone-900"
+            >
+              {KEYS.map((key, i) => (
+                <option key={key} value={i}>{key}</option>
+              ))}
+            </select>
+          </div>
+          <button className="p-2 hover:bg-stone-100 rounded-full transition-colors text-stone-600">
+            <Settings className="w-5 h-5" />
+          </button>
+        </div>
       </header>
 
       <main className="max-w-4xl mx-auto p-6 flex flex-col gap-8">
+        {/* Mobile Key Selector */}
+        <section className="md:hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 flex items-center justify-between">
+          <span className="text-sm font-bold text-stone-500 uppercase tracking-wider">Song Key</span>
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+            {KEYS.map((key, i) => (
+              <button
+                key={key}
+                onClick={() => setTargetKey(i)}
+                className={`min-w-[2.5rem] h-10 rounded-xl font-bold transition-all ${
+                  targetKey === i 
+                    ? 'bg-stone-800 text-white shadow-md' 
+                    : 'bg-stone-50 text-stone-400 border border-stone-100'
+                }`}
+              >
+                {key}
+              </button>
+            ))}
+          </div>
+        </section>
+
         {/* Pattern Selector */}
         <section className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
           <div className="flex items-center gap-2 mb-4 text-stone-700">
@@ -128,7 +177,7 @@ export default function App() {
                 onClick={() => paginate(-1)}
               >
                 <ChordDiagram
-                  frets={selectedPattern.chords[prevIndex].frets}
+                  frets={getShiftedFrets(selectedPattern.chords[prevIndex].frets)}
                   name={selectedPattern.chords[prevIndex].name}
                   roman={selectedPattern.chords[prevIndex].roman}
                 />
@@ -136,7 +185,7 @@ export default function App() {
 
               {/* Current Chord */}
               <motion.div
-                key={`${selectedPatternId}-${currentChordIndex}`}
+                key={`${selectedPatternId}-${currentChordIndex}-${fretOffset}`}
                 initial={{ scale: 0.8, opacity: 0, x: direction * 50 }}
                 animate={{ scale: 1, opacity: 1, x: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -150,7 +199,7 @@ export default function App() {
                 }}
               >
                 <ChordDiagram
-                  frets={currentChord.frets}
+                  frets={shiftedCurrentFrets}
                   name={currentChord.name}
                   roman={currentChord.roman}
                 />
@@ -162,7 +211,7 @@ export default function App() {
                 onClick={() => paginate(1)}
               >
                 <ChordDiagram
-                  frets={selectedPattern.chords[nextIndex].frets}
+                  frets={getShiftedFrets(selectedPattern.chords[nextIndex].frets)}
                   name={selectedPattern.chords[nextIndex].name}
                   roman={selectedPattern.chords[nextIndex].roman}
                 />
