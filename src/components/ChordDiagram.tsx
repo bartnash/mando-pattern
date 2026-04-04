@@ -9,16 +9,16 @@ interface ChordDiagramProps {
 
 export const ChordDiagram: React.FC<ChordDiagramProps> = ({ frets, name, roman, className = "" }) => {
   const strings = ['G', 'D', 'A', 'E'];
-  const numFrets = 5;
+  const numFrets = 6;
   
   // Find the minimum fret to start the diagram (for movable chords)
-  const activeFrets = frets.filter((f): f is number => typeof f === 'number');
-  const minFret = activeFrets.length > 0 ? Math.max(1, Math.min(...activeFrets)) : 1;
+  const activeFrets = frets.filter((f): f is number => typeof f === 'number' && f > 0);
+  const minFret = activeFrets.length > 0 ? Math.min(...activeFrets) : 1;
   const startFret = minFret > 1 ? minFret : 1;
 
-  const fretWidth = 60;
+  const fretWidth = 55;
   const stringSpacing = 40;
-  const height = 300;
+  const height = 380;
   const width = 200;
   const margin = { top: 40, right: 20, bottom: 20, left: 40 };
 

@@ -120,7 +120,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="relative w-full overflow-hidden py-8">
+          <div className="relative w-full overflow-hidden py-12">
             <div className="flex items-center justify-center gap-4 md:gap-12 px-4">
               {/* Previous Chord */}
               <div 
