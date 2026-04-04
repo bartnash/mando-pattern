@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Music, Info, Settings, ListMusic } from 'lucide-react';
 import { DEFAULT_PATTERNS } from './constants';
 import { ChordDiagram } from './components/ChordDiagram';
+import { FullNeckView } from './components/FullNeckView';
 import { Pattern } from './types';
 
 export default function App() {
@@ -10,6 +11,7 @@ export default function App() {
   const [currentChordIndex, setCurrentChordIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [targetKey, setTargetKey] = useState(0); // 0=G, 1=G#, 2=A, etc.
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const KEYS = ['G', 'G#', 'A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#'];
 
@@ -49,10 +51,19 @@ export default function App() {
     setCurrentChordIndex(0);
   }, [selectedPatternId]);
 
+  // Scroll listener for collapsing header
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen bg-stone-100 text-stone-900 font-sans selection:bg-stone-200">
       {/* Header */}
-      <header className="bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+      <header className={`bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between sticky z-50 shadow-sm transition-all duration-300 ${isScrolled ? 'top-[-80px]' : 'top-0'}`}>
         <div className="flex items-center gap-3">
           <div className="bg-stone-800 p-2 rounded-lg">
             <Music className="text-white w-6 h-6" />
@@ -83,7 +94,7 @@ export default function App() {
 
       <main className="max-w-4xl mx-auto p-6 flex flex-col gap-8">
         {/* Mobile Key Selector */}
-        <section className="md:hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 flex items-center justify-between">
+        <section className={`md:hidden sticky z-40 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-stone-200 flex items-center justify-between -mx-4 px-4 transition-all duration-300 ${isScrolled ? 'top-[-80px]' : 'top-[64px]'}`}>
           <span className="text-sm font-bold text-stone-500 uppercase tracking-wider">Song Key</span>
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
             {KEYS.map((key, i) => (
@@ -103,12 +114,23 @@ export default function App() {
         </section>
 
         {/* Pattern Selector */}
-        <section className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-          <div className="flex items-center gap-2 mb-4 text-stone-700">
-            <ListMusic className="w-5 h-5" />
-            <h2 className="font-semibold">Select Pattern</h2>
+        <section className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 text-stone-700">
+              <ListMusic className="w-5 h-5" />
+              <h2 className="font-semibold text-sm md:text-base">Pattern</h2>
+            </div>
+            <select 
+              value={selectedPatternId}
+              onChange={(e) => setSelectedPatternId(e.target.value)}
+              className="md:hidden bg-stone-50 border border-stone-200 rounded-lg px-2 py-1 text-xs font-bold text-stone-700 outline-none"
+            >
+              {DEFAULT_PATTERNS.map(p => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="hidden md:grid grid-cols-2 gap-3">
             {DEFAULT_PATTERNS.map((pattern) => (
               <button
                 key={pattern.id}
@@ -128,48 +150,50 @@ export default function App() {
           </div>
         </section>
 
-        {/* Chord Viewer */}
-        <section className="flex flex-col items-center gap-6 w-full">
-          <div className="w-full flex flex-col sm:flex-row items-center justify-between px-4 max-w-2xl mx-auto gap-6">
-            <div className="flex flex-col items-center sm:items-start">
-              <span className="text-xs font-bold text-stone-400 uppercase tracking-widest">Position</span>
-              <span className="text-2xl font-black text-stone-800">{currentChord.number} / 7</span>
-            </div>
+        {/* Chord Viewer & Neck Context */}
+        <section className="flex flex-col items-center gap-4 w-full">
+          <div className={`w-full sticky z-40 bg-stone-100/80 backdrop-blur-md py-2 -mx-4 px-4 transition-all duration-300 ${isScrolled ? 'top-0' : 'md:top-[64px] top-[128px]'}`}>
+            <div className="flex flex-col sm:flex-row items-center justify-between max-w-2xl mx-auto gap-4">
+              <div className="flex flex-col items-center sm:items-start">
+                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Position</span>
+                <span className="text-xl font-black text-stone-800">{currentChord.number} / 7</span>
+              </div>
 
-            {/* Direct Navigation Roman Numerals */}
-            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl shadow-sm border border-stone-200 overflow-x-auto max-w-full no-scrollbar">
-              {selectedPattern.chords.map((chord, idx) => (
+              {/* Direct Navigation Roman Numerals */}
+              <div className="flex items-center gap-1 bg-white p-1 rounded-2xl shadow-sm border border-stone-200 overflow-x-auto max-w-full no-scrollbar">
+                {selectedPattern.chords.map((chord, idx) => (
+                  <button
+                    key={chord.number}
+                    onClick={() => jumpToChord(idx)}
+                    className={`min-w-[2.2rem] h-9 px-2 rounded-xl font-bold transition-all duration-200 flex items-center justify-center text-sm ${
+                      currentChordIndex === idx
+                        ? 'bg-stone-800 text-white shadow-lg scale-105'
+                        : 'text-stone-400 hover:bg-stone-100 hover:text-stone-600'
+                    }`}
+                  >
+                    {chord.roman}
+                  </button>
+                ))}
+              </div>
+
+              <div className="hidden sm:flex gap-2">
                 <button
-                  key={chord.number}
-                  onClick={() => jumpToChord(idx)}
-                  className={`min-w-[2.5rem] h-10 px-2 rounded-xl font-bold transition-all duration-200 flex items-center justify-center ${
-                    currentChordIndex === idx
-                      ? 'bg-stone-800 text-white shadow-lg scale-105'
-                      : 'text-stone-400 hover:bg-stone-100 hover:text-stone-600'
-                  }`}
+                  onClick={() => paginate(-1)}
+                  className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95"
                 >
-                  {chord.roman}
+                  <ChevronLeft className="w-5 h-5" />
                 </button>
-              ))}
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => paginate(-1)}
-                className="p-3 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={() => paginate(1)}
-                className="p-3 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
+                <button
+                  onClick={() => paginate(1)}
+                  className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="relative w-full overflow-hidden py-12">
+          <div className="relative w-full overflow-hidden py-4">
             <div className="flex items-center justify-center gap-4 md:gap-12 px-4">
               {/* Previous Chord */}
               <div 
@@ -189,7 +213,7 @@ export default function App() {
                 initial={{ scale: 0.8, opacity: 0, x: direction * 50 }}
                 animate={{ scale: 1, opacity: 1, x: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="z-10 shadow-2xl rounded-2xl"
+                className="z-10 shadow-xl rounded-2xl"
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
@@ -217,38 +241,57 @@ export default function App() {
                 />
               </div>
             </div>
-            
-            {/* Mobile Swipe Hint */}
-            <div className="sm:hidden text-center mt-4 text-stone-400 text-xs font-medium animate-pulse">
-              ← Swipe to navigate →
-            </div>
           </div>
 
-          {/* Chord Info */}
-          <div className="w-full bg-white p-6 rounded-2xl shadow-sm border border-stone-200 flex items-start gap-4">
-            <div className="bg-stone-100 p-3 rounded-xl text-stone-600">
-              <Info className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-bold text-stone-800">Chord Details</h4>
-              <p className="text-stone-600 text-sm mt-1">
-                {currentChord.description || "A standard movable shape for this scale degree."}
-              </p>
-              <div className="mt-3 flex gap-2">
-                {currentChord.frets.map((f, i) => (
-                  <div key={i} className="flex flex-col items-center">
-                    <span className="text-[10px] text-stone-400 font-bold">
-                      {['G', 'D', 'A', 'E'][i]}
-                    </span>
-                    <div className="w-8 h-8 bg-stone-50 border border-stone-200 rounded-lg flex items-center justify-center font-mono font-bold text-stone-700">
-                      {f}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Full Neck View - Now Swipable */}
+          <motion.div 
+            className="w-full cursor-grab active:cursor-grabbing"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.1}
+            onDragEnd={(_, info) => {
+              if (info.offset.x > 50) paginate(-1);
+              else if (info.offset.x < -50) paginate(1);
+            }}
+          >
+            <FullNeckView 
+              pattern={selectedPattern}
+              currentChord={currentChord}
+              fretOffset={fretOffset}
+              className="w-full"
+            />
+          </motion.div>
+
+          {/* Mobile Swipe Hint */}
+          <div className="text-center text-stone-400 text-[10px] font-bold uppercase tracking-widest animate-pulse">
+            Swipe neck or diagram to navigate
           </div>
         </section>
+
+        {/* Chord Info */}
+        <div className="w-full bg-white p-6 rounded-2xl shadow-sm border border-stone-200 flex items-start gap-4">
+          <div className="bg-stone-100 p-3 rounded-xl text-stone-600">
+            <Info className="w-6 h-6" />
+          </div>
+          <div>
+            <h4 className="font-bold text-stone-800">Chord Details</h4>
+            <p className="text-stone-600 text-sm mt-1">
+              {currentChord.description || "A standard movable shape for this scale degree."}
+            </p>
+            <div className="mt-3 flex gap-2">
+              {currentChord.frets.map((f, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <span className="text-[10px] text-stone-400 font-bold">
+                    {['G', 'D', 'A', 'E'][i]}
+                  </span>
+                  <div className="w-8 h-8 bg-stone-50 border border-stone-200 rounded-lg flex items-center justify-center font-mono font-bold text-stone-700">
+                    {f}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </main>
 
       {/* Footer */}
