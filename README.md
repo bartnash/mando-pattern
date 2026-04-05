@@ -2,6 +2,13 @@
 
 A visual tool for mandolin players to learn and share movable chord patterns and riffs across the neck.
 
+## AI-Assisted Development & Contribution Guidelines
+
+This project is set up to facilitate development with multiple AI coding assistants. For a comprehensive overview, contribution guidelines, and project context, please refer to:
+
+*   [AGENTS.md](./AGENTS.md) - Project overview and AI agent instructions.
+*   [CONTRIBUTING.md](./CONTRIBUTING.md) - Detailed contribution guidelines and conventions.
+
 ## Features
 
 - **Dynamic Chord Diagrams**: Custom SVG-based fretboard diagrams for mandolin (G-D-A-E tuning).
