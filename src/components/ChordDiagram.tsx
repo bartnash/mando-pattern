@@ -23,7 +23,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({ frets, name, roman, 
   const margin = { top: 40, right: 20, bottom: 20, left: 40 };
 
   return (
-    <div className={`flex flex-col items-center bg-stone-50 p-8 rounded-2xl shadow-xl border border-stone-200 transition-all duration-500 ${className}`}>
+    <div className={`flex flex-col items-center bg-stone-50 p-8 rounded-2xl shadow-xl border border-stone-200 transition-all duration-500 landscape:max-lg:rotate-[-90deg] landscape:max-lg:scale-75 landscape:max-lg:my-[-100px] ${className}`}>
       <div className="mb-4 text-center">
         <h3 className="text-3xl font-bold text-stone-800">{roman}</h3>
         <p className="text-stone-500 font-medium uppercase tracking-widest text-sm">{name}</p>

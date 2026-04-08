@@ -193,8 +193,8 @@ export default function App() {
             </div>
           </div>
 
-          <div className="relative w-full overflow-hidden py-4">
-            <div className="flex items-center justify-center gap-4 md:gap-12 px-4">
+          <div className="relative w-full overflow-hidden py-4 landscape:max-lg:h-[350px] landscape:max-lg:flex landscape:max-lg:items-center">
+            <div className="flex items-center justify-center gap-4 md:gap-12 px-4 w-full">
               {/* Previous Chord */}
               <div 
                 className="hidden sm:block transition-all duration-500 cursor-pointer opacity-0 sm:opacity-30 scale-75 grayscale hover:opacity-50"
@@ -213,7 +213,7 @@ export default function App() {
                 initial={{ scale: 0.8, opacity: 0, x: direction * 50 }}
                 animate={{ scale: 1, opacity: 1, x: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="z-10 shadow-xl rounded-2xl"
+                className="z-10 rounded-2xl"
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
