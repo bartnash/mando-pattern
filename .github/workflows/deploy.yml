@@ -22,7 +22,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     permissions:      
-      contents: write # Required for pushing to gh-pages branch
       pages: write # Required for GitHub Pages deployment
       id-token: write # Required for OIDC (if used, good practice to include)
 
@@ -42,17 +41,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload static files as artifact
-        id: upload
-        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # GitHub token for authentication
-          publish_dir: ./dist # Directory to publish
-          cname: example.com # Optional: if you have a custom domain
 
