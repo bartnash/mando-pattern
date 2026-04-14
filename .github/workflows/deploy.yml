@@ -42,9 +42,15 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: ./dist
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: peaceiris/actions-gh-pages@v3
+        uses: actions/deploy-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # GitHub token for authentication
           publish_dir: ./dist # Directory to publish
