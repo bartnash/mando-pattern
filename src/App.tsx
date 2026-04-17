@@ -268,30 +268,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Chord Info */}
-        <div className="w-full bg-white p-6 rounded-2xl shadow-sm border border-stone-200 flex items-start gap-4">
-          <div className="bg-stone-100 p-3 rounded-xl text-stone-600">
-            <Info className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-bold text-stone-800">Chord Details</h4>
-            <p className="text-stone-600 text-sm mt-1">
-              {currentChord.description || "A standard movable shape for this scale degree."}
-            </p>
-            <div className="mt-3 flex gap-2">
-              {currentChord.frets.map((f, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <span className="text-[10px] text-stone-400 font-bold">
-                    {['G', 'D', 'A', 'E'][i]}
-                  </span>
-                  <div className="w-8 h-8 bg-stone-50 border border-stone-200 rounded-lg flex items-center justify-center font-mono font-bold text-stone-700">
-                    {f}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* Footer */}

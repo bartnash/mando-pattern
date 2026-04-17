@@ -29,7 +29,7 @@ export const FullNeckView: React.FC<FullNeckViewProps> = ({
   const currentFrets = getShiftedFrets(currentChord.frets);
 
   return (
-    <div className={`bg-white p-6 rounded-2xl border border-stone-200 shadow-sm overflow-x-auto no-scrollbar ${className}`}>
+    <div className={`bg-white p-6 rounded-2xl border border-stone-200 shadow-sm ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-sm font-bold text-stone-400 uppercase tracking-widest">Full Neck Context</h4>
         <div className="flex gap-4 text-[10px] font-medium text-stone-500">
@@ -44,8 +44,11 @@ export const FullNeckView: React.FC<FullNeckViewProps> = ({
         </div>
       </div>
 
-      <div className="min-w-max">
-        <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      <div className="w-full">
+        <svg 
+          viewBox={`0 0 ${width} ${height}`}
+          className="w-full h-auto overflow-visible"
+        >
           {/* Fretboard Background */}
           <rect 
             x={margin.left} 
