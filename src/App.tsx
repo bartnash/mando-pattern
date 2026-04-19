@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronLeft, ChevronRight, Music, Info, Settings, ListMusic } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Info, Settings, ListMusic } from 'lucide-react';
 import { DEFAULT_PATTERNS } from './constants';
 import { ChordDiagram } from './components/ChordDiagram';
 import { FullNeckView } from './components/FullNeckView';
@@ -65,9 +65,7 @@ export default function App() {
       {/* Header */}
       <header className={`bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between sticky z-50 shadow-sm transition-all duration-300 ${isScrolled ? 'top-[-80px]' : 'top-0'}`}>
         <div className="flex items-center gap-3">
-          <div className="bg-stone-800 p-2 rounded-lg">
-            <Music className="text-white w-6 h-6" />
-          </div>
+          <img src="favicon.svg" alt="Logo" className="w-8 h-8 rounded-md" />
           <div>
             <h1 className="text-xl font-bold tracking-tight">Mandolin Pattern Pro</h1>
             <p className="text-xs text-stone-500 font-medium">Movable Chord Explorer</p>
