@@ -22,13 +22,13 @@ export const DEFAULT_PATTERNS: Pattern[] = [
     description: 'Derived from the IV chord of the G-chop pattern.',
     rootNote: 7, // D
     chords: [
-      { number: 1, name: 'Major', roman: 'I', frets: [5, 2, 3, 0], description: 'D-shape root' },
-      { number: 2, name: 'Minor', roman: 'ii', frets: [7, 4, 5, 2], description: 'Em-shape' },
-      { number: 3, name: 'Minor', roman: 'iii', frets: [9, 6, 7, 4], description: 'F#m-shape' },
-      { number: 4, name: 'Major', roman: 'IV', frets: [0, 0, 2, 3], description: 'G-shape' },
-      { number: 5, name: 'Major', roman: 'V', frets: [2, 2, 4, 5], description: 'A-shape' },
+      { number: 1, name: 'Major', roman: 'I', frets: [7, 4, 5, 2], description: 'D-shape root' },
+      { number: 2, name: 'Minor', roman: 'ii', frets: [4, 2, 2, 3], description: 'Em-shape' },
+      { number: 3, name: 'Minor', roman: 'iii', frets: [6, 4, 4, 5], description: 'F#m-shape' },
+      { number: 4, name: 'Major', roman: 'IV', frets: [7, 5, 2, 3], description: 'G-shape' },
+      { number: 5, name: 'Major', roman: 'V', frets: [9, 7, 4, 5], description: 'A-shape' },
       { number: 6, name: 'Minor', roman: 'vi', frets: [4, 4, 5, 7], description: 'Bm-shape' },
-      { number: 7, name: 'Diminished', roman: 'vii°', frets: [6, 6, 7, 9], description: 'C#dim-shape' },
+      { number: 7, name: 'Diminished', roman: 'vii°', frets: [6, 6, 7, 9], description: 'C#m-shape' },
     ]
   }
 ];
