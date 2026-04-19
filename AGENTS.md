@@ -28,4 +28,11 @@ Mandolin Pattern Pro is a React-based interactive tool for mandolin players to e
 - [x] Offline Support (PWA)
 
 ## Development Philosophy
-This project strictly follows **Spec-Driven Development**. All changes must be reflected in `specs/SPEC.md` before implementation. Mandates for agents are located in `GEMINI.md`.
+This project strictly follows **Spec-Driven Development**. All changes must be reflected in the relevant file in the `specs/` directory before implementation. 
+
+### Specification Map
+- `specs/mission.md`: Goals, Features, and Domain Models.
+- `specs/tech-stack.md`: Technical requirements and standards.
+- `specs/roadmap.md`: Current status and future plans.
+
+Mandates for agents are located in `GEMINI.md`.

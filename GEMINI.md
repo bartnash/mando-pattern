@@ -3,8 +3,11 @@
 This project follows **Spec-Driven Development (SDD)**. Adhere to these mandates for all contributions.
 
 ## 1. The Specification is Law
-- `specs/SPEC.md` is the source of truth.
-- Before implementing a feature or fixing a bug, ensure the intended behavior is documented in `specs/SPEC.md`.
+- The `specs/` directory is the source of truth.
+- Before implementing a feature or fixing a bug, ensure the intended behavior is documented in the appropriate spec file:
+  - `specs/mission.md` for functional/domain changes.
+  - `specs/tech-stack.md` for architectural/library changes.
+  - `specs/roadmap.md` for status tracking.
 - If a change deviates from the spec, update the spec first.
 
 ## 2. Engineering Standards
