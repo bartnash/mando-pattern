@@ -7,7 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    base: '/mando-pattern/',
+    base: mode === 'production' ? '/mando-pattern/' : '/',
     plugins: [
       react(), 
       tailwindcss(),
