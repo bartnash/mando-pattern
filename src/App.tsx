@@ -72,18 +72,6 @@ export default function App() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-3 bg-stone-50 px-4 py-1.5 rounded-full border border-stone-200">
-            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Key</span>
-            <select 
-              value={targetKey}
-              onChange={(e) => setTargetKey(parseInt(e.target.value))}
-              className="bg-transparent text-sm font-bold text-stone-700 outline-none cursor-pointer hover:text-stone-900"
-            >
-              {KEYS.map((key, i) => (
-                <option key={key} value={i}>{key}</option>
-              ))}
-            </select>
-          </div>
           <button className="p-2 hover:bg-stone-100 rounded-full transition-colors text-stone-600">
             <Settings className="w-5 h-5" />
           </button>
@@ -91,26 +79,6 @@ export default function App() {
       </header>
 
       <main className="max-w-4xl mx-auto p-6 flex flex-col gap-8">
-        {/* Mobile Key Selector */}
-        <section className={`md:hidden sticky z-40 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-stone-200 flex items-center justify-between -mx-4 px-4 transition-all duration-300 ${isScrolled ? 'top-[-80px]' : 'top-[64px]'}`}>
-          <span className="text-sm font-bold text-stone-500 uppercase tracking-wider">Song Key</span>
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-            {KEYS.map((key, i) => (
-              <button
-                key={key}
-                onClick={() => setTargetKey(i)}
-                className={`min-w-[2.5rem] h-10 rounded-xl font-bold transition-all ${
-                  targetKey === i 
-                    ? 'bg-stone-800 text-white shadow-md' 
-                    : 'bg-stone-50 text-stone-400 border border-stone-100'
-                }`}
-              >
-                {key}
-              </button>
-            ))}
-          </div>
-        </section>
-
         {/* Pattern Selector */}
         <section className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
           <div className="flex items-center justify-between mb-4">
@@ -150,15 +118,20 @@ export default function App() {
 
         {/* Chord Viewer & Neck Context */}
         <section className="flex flex-col items-center gap-4 w-full">
-          <div className={`w-full sticky z-40 bg-stone-100/80 backdrop-blur-md py-2 -mx-4 px-4 transition-all duration-300 ${isScrolled ? 'top-0' : 'md:top-[64px] top-[128px]'}`}>
-            <div className="flex flex-col sm:flex-row items-center justify-between max-w-2xl mx-auto gap-4">
-              <div className="flex flex-col items-center sm:items-start">
-                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Position</span>
-                <span className="text-xl font-black text-stone-800">{currentChord.number} / 7</span>
+          <div className={`w-full sticky z-40 bg-stone-100/80 backdrop-blur-md py-2 -mx-4 px-4 transition-all duration-300 ${isScrolled ? 'top-0' : 'top-[64px]'}`}>
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center max-w-2xl mx-auto gap-2 md:gap-4">
+              {/* Left Column: Previous Button */}
+              <div className="flex justify-start">
+                <button
+                  onClick={() => paginate(-1)}
+                  className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95 shrink-0"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
               </div>
 
-              {/* Direct Navigation Roman Numerals */}
-              <div className="flex items-center gap-1 bg-white p-1 rounded-2xl shadow-sm border border-stone-200 overflow-x-auto max-w-full no-scrollbar">
+              {/* Center Column: Roman Numeral Bar */}
+              <div className="flex items-center gap-1 bg-white p-1 rounded-2xl shadow-sm border border-stone-200 overflow-x-auto no-scrollbar">
                 {selectedPattern.chords.map((chord, idx) => (
                   <button
                     key={chord.number}
@@ -174,19 +147,28 @@ export default function App() {
                 ))}
               </div>
 
-              <div className="hidden sm:flex gap-2">
-                <button
-                  onClick={() => paginate(-1)}
-                  className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => paginate(1)}
-                  className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
+              {/* Right Column: Key Selector (Centered) and Next Button (Right) */}
+              <div className="flex items-center justify-center relative">
+                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-stone-200 shadow-sm">
+                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider hidden sm:block">Key</span>
+                  <select 
+                    value={targetKey}
+                    onChange={(e) => setTargetKey(parseInt(e.target.value))}
+                    className="bg-transparent text-sm font-bold text-stone-700 outline-none cursor-pointer hover:text-stone-900"
+                  >
+                    {KEYS.map((key, i) => (
+                      <option key={key} value={i}>{key}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="absolute right-0">
+                  <button
+                    onClick={() => paginate(1)}
+                    className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95 shrink-0"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
