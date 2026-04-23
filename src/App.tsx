@@ -118,25 +118,23 @@ export default function App() {
 
         {/* Chord Viewer & Neck Context */}
         <section className="flex flex-col items-center gap-4 w-full">
-          <div className={`w-full sticky z-40 bg-stone-100/80 backdrop-blur-md py-2 -mx-4 px-4 transition-all duration-300 ${isScrolled ? 'top-0' : 'top-[64px]'}`}>
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center max-w-2xl mx-auto gap-2 md:gap-4">
+          <div className={`w-full sticky z-40 bg-stone-100/80 backdrop-blur-md py-2 -mx-2 px-2 md:-mx-4 md:px-4 transition-all duration-300 ${isScrolled ? 'top-0' : 'top-[64px]'}`}>
+            <div className="grid grid-cols-[auto_1fr_auto] items-center max-w-2xl mx-auto gap-1 md:gap-4">
               {/* Left Column: Previous Button */}
-              <div className="flex justify-start">
-                <button
-                  onClick={() => paginate(-1)}
-                  className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95 shrink-0"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-              </div>
+              <button
+                onClick={() => paginate(-1)}
+                className="p-1.5 md:p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95 shrink-0"
+              >
+                <ChevronLeft className="w-4 h-4 md:w-5 h-5" />
+              </button>
 
               {/* Center Column: Roman Numeral Bar */}
-              <div className="flex items-center gap-1 bg-white p-1 rounded-2xl shadow-sm border border-stone-200 overflow-x-auto no-scrollbar">
+              <div className="flex items-center gap-1 bg-white p-1 rounded-2xl shadow-sm border border-stone-200 overflow-x-auto no-scrollbar justify-self-center">
                 {selectedPattern.chords.map((chord, idx) => (
                   <button
                     key={chord.number}
                     onClick={() => jumpToChord(idx)}
-                    className={`min-w-[2.2rem] h-9 px-2 rounded-xl font-bold transition-all duration-200 flex items-center justify-center text-sm ${
+                    className={`min-w-[2rem] md:min-w-[2.2rem] h-8 md:h-9 px-1.5 md:px-2 rounded-xl font-bold transition-all duration-200 flex items-center justify-center text-xs md:text-sm ${
                       currentChordIndex === idx
                         ? 'bg-stone-800 text-white shadow-lg scale-105'
                         : 'text-stone-400 hover:bg-stone-100 hover:text-stone-600'
@@ -147,28 +145,25 @@ export default function App() {
                 ))}
               </div>
 
-              {/* Right Column: Key Selector (Centered) and Next Button (Right) */}
-              <div className="flex items-center justify-center relative">
-                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-stone-200 shadow-sm">
-                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider hidden sm:block">Key</span>
+              {/* Right Column: Key Selector and Next Button */}
+              <div className="flex items-center gap-1 md:gap-2">
+                <div className="bg-white px-2 py-1 md:px-3 md:py-1.5 rounded-xl border border-stone-200 shadow-sm">
                   <select 
                     value={targetKey}
                     onChange={(e) => setTargetKey(parseInt(e.target.value))}
-                    className="bg-transparent text-sm font-bold text-stone-700 outline-none cursor-pointer hover:text-stone-900"
+                    className="bg-transparent text-xs md:text-sm font-bold text-stone-700 outline-none cursor-pointer hover:text-stone-900"
                   >
                     {KEYS.map((key, i) => (
                       <option key={key} value={i}>{key}</option>
                     ))}
                   </select>
                 </div>
-                <div className="absolute right-0">
-                  <button
-                    onClick={() => paginate(1)}
-                    className="p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95 shrink-0"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => paginate(1)}
+                  className="p-1.5 md:p-2 bg-white rounded-full shadow-md border border-stone-200 hover:bg-stone-50 transition-all active:scale-95 shrink-0"
+                >
+                  <ChevronRight className="w-4 h-4 md:w-5 h-5" />
+                </button>
               </div>
             </div>
           </div>
